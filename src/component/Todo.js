@@ -1,8 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
+
 // import "./App.css";
 
 
-function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
+
+function Todo({ todo, index,id, completeTodo, removeTodo, handleUpdate }) {
+
     return (
         <div
             className="todo"
@@ -11,9 +14,9 @@ function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
             {todo.text}
 
             <div>
-                <button onClick={() => handleUpdate(todo, index)}>Edit</button>
-                <button onClick={() => completeTodo(index)}>Complete</button>
-                <button onClick={() => removeTodo(index)}>x</button>
+                <button onClick={() => handleUpdate(todo, index,id)}>Edit</button>
+                <button onClick={() => completeTodo(index,id)}>Complete</button>
+                <button onClick={() => removeTodo(index,id)}>x</button>
             </div>
         </div>
     );

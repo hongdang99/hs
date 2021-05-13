@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import "./App.css";
 import Todo from "./component/Todo.js"
 import TodoForm from "./component/TodoForm.js"
+import { axios } from "./axios";
 
 const TYPE_STATUS = {
   Active: 'Active',
@@ -12,23 +13,27 @@ const TYPE_STATUS = {
 function App() {
 
   // state
-  const [todos, setTodos] = useState([
-    {
-      text: "Học React",
-      isCompleted: false
-    },
-    {
-      text: "Học Ielts",
-      isCompleted: false
-    },
-    {
-      text: "Build a todo list",
-      isCompleted: false
-    }
-  ]);
+  const [todos, setTodos] = useState([]
+
+
+  );
   const [indexEdit, setIndexEdit] = useState(null)
   const [status, setStatus] = useState(TYPE_STATUS.All)
   const [allDone, setAllDone] = useState(false)
+
+  const getTodos = async () => {
+    const response = await axios.get("/todo").catch((err) => {
+      console.log("Error:", err);
+    });
+    if (response && response.data) {
+      setTodos(response.data);
+      console.log("todo:",todos)
+    }
+  };
+
+  React.useEffect(() => {
+    getTodos();
+  }, []);
 
   // ref
   const refInput = React.useRef();
@@ -47,34 +52,60 @@ function App() {
   }
 
   // handle func
-  const addTodo = (text) => {
-    const newTodos = [...todos, {text}];
-    // const newTodos = todos.map((item) =>{
-    //   if (item.text!==text){
-    //   }
-    // })
-    setTodos(newTodos);
+  // const addTodo = (text) => {
+  //   const newTodos = [...todos, {text}];
+  //   setTodos(newTodos);
+  // };
+  const addTodo = async (value) => {
+
+    const dataDefault = {
+      text: value,
+      isCompleted: false,
+    };
+    // console.log("text:",text);
+    const response = await axios.post("/todo", dataDefault).catch((err) => {
+      console.log("Error: ", err);
+    });
+
+    if (response) {
+      const newTodos = [...todos, dataDefault];
+      setTodos(newTodos);
+      console.log('todos', todos); // MongLV log fix bug
+    }
+
   };
 
   const completeTodo = (index) => {
     const newTodos = [...todos];
-    debugger;
     newTodos[index].isCompleted = true;
     setTodos(newTodos);
 
   };
 
-  const removeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
+  // const removeTodoe = (index) => {
+  //   const newTodos = [...todos];
+  //   newTodos.splice(index, 1);
+  //   setTodos(newTodos);
+  // };
+
+  const removeTodo = async (index,id) => {
+    const response = await axios.delete(`/todo/${id}`).catch((err) => {
+      console.log("Error deleting: ", err);
+    });
+
+    if (response) {
+      const newTodos = [...todos];
+        newTodos.splice(index, 1);
+        setTodos(newTodos);
+    };
   };
-  const handleUpdateText = (value, index) => {
+
+  const handleUpdateText = (todo, index) => {
     setIndexEdit(index)
-    refInput.current.handleValueText(value.text)
+    refInput.current.handleValueText(todo.text)
     }
 
-  const handleUpdate = (indexEdit, value) => {
+  const handleUpdate = (indexEdit, value, id) => {
     const newTodos = todos.map((item, index) => {
       if(index === indexEdit) {
         return {...item, text: value}
@@ -122,7 +153,9 @@ function App() {
                     handleUpdate={handleUpdateText}
                     completeTodo={completeTodo}
                     removeTodo={removeTodo}
+
                 />
+
             ))}
 
             <TodoForm
@@ -141,5 +174,6 @@ function App() {
           </div>
         </div>
     );
+
 }
 export default App;

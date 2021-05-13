@@ -3,12 +3,11 @@ import React, { useState } from "react";
 
 function TodoForm(props) {
     const { addTodo, refCallback, indexEdit, handleUpdate } = props;
-    const [value, setValue] = useState("mong");
+    const [value, setValue] = useState("");
 
     const handleSubmit = (event) => {
         console.log('event:', event);
         event.preventDefault();
-        debugger;
         // edit
         if(indexEdit) {
             handleUpdate(indexEdit, value)
