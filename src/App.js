@@ -112,7 +112,7 @@ function App() {
 
   };
 
-  const handleUpdateText = async (todo, index, id) => {
+  const handleUpdateText = async (todo, index) => {
     const putData = {...todo};
     delete putData.id;
     setIndexEdit(index);
