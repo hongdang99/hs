@@ -4,8 +4,9 @@ import React, {useEffect} from "react";
 
 
 
-function Todo({ todo, index,id, completeTodo, removeTodo, handleUpdate }) {
+function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
 
+    if(!(todo && todo.id)) return null;
     return (
         <div
             className="todo"
@@ -14,9 +15,9 @@ function Todo({ todo, index,id, completeTodo, removeTodo, handleUpdate }) {
             {todo.text}
 
             <div>
-                <button onClick={() => handleUpdate(todo, index,id)}>Edit</button>
-                <button onClick={() => completeTodo(index,id)}>Complete</button>
-                <button onClick={() => removeTodo(index,id)}>x</button>
+                <button onClick={() => handleUpdate(todo, index, todo.id)}>Edit</button>
+                <button onClick={() => completeTodo(index, todo.id)}>Complete</button>
+                <button onClick={() => removeTodo(index,todo.id)}>x</button>
             </div>
         </div>
     );

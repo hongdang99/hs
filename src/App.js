@@ -13,14 +13,13 @@ const TYPE_STATUS = {
 function App() {
 
   // state
-  const [todos, setTodos] = useState([]
-
-
-  );
+  const [todos, setTodos] = useState([]);
   const [indexEdit, setIndexEdit] = useState(null)
   const [status, setStatus] = useState(TYPE_STATUS.All)
   const [allDone, setAllDone] = useState(false)
+  const [itemEdit, setItemEdit] = useState(null);
 
+  // API
   const getTodos = async () => {
     const response = await axios.get("/todo").catch((err) => {
       console.log("Error:", err);
@@ -31,6 +30,60 @@ function App() {
     }
   };
 
+  const addTodo = async (value) => {
+
+    const dataDefault = {
+      text: value,
+      isCompleted: false,
+    };
+    // console.log("text:",text);
+    const response = await axios.post("/todo", dataDefault).catch((err) => {
+      console.log("Error: ", err);
+    });
+
+    if (response && response.data && typeof response.data === 'object') {
+      console.log('response', response);
+      const newTodos = [...todos, response.data];
+      setTodos(newTodos);
+      // console.log('todos', todos);
+    }
+
+  };
+
+  const removeTodo = async (index,id) => {
+    const response = await axios.delete(`/todo/${id}`).catch((err) => {
+      console.log("Error deleting: ", err);
+    });
+
+    if (response) {
+      console.log('response', response);
+      const newTodos = [...todos];
+      newTodos.splice(index, 1);
+      setTodos(newTodos);
+    };
+  };
+
+  const handleUpdate = async (indexEdit, value) => {
+    if(itemEdit && itemEdit.id) {
+      const response = await axios.put(`/todo/${itemEdit.id}`, {...itemEdit, text: value}).catch((err) => {
+        console.log("Error deleting: ", err);
+      });
+      console.log('response', response);
+      if(response && (response.status === 200 || response.statusText === 'OK')) {
+        const newTodos = todos.map((item, index) => {
+          if(index === indexEdit) {
+            return {...item, text: value}
+          } else return item
+        })
+        // console.log('newTodos', newTodos);
+        setTodos(newTodos);
+        setIndexEdit(null);
+        setItemEdit(null);
+      } else alert(response.statusText)
+    } else alert('Ko co id')
+  }
+
+  // lifecycle
   React.useEffect(() => {
     getTodos();
   }, []);
@@ -51,30 +104,7 @@ function App() {
     }
   }
 
-  // handle func
-  // const addTodo = (text) => {
-  //   const newTodos = [...todos, {text}];
-  //   setTodos(newTodos);
-  // };
-  const addTodo = async (value) => {
-
-    const dataDefault = {
-      text: value,
-      isCompleted: false,
-    };
-    // console.log("text:",text);
-    const response = await axios.post("/todo", dataDefault).catch((err) => {
-      console.log("Error: ", err);
-    });
-
-    if (response) {
-      const newTodos = [...todos, dataDefault];
-      setTodos(newTodos);
-      console.log('todos', todos); // MongLV log fix bug
-    }
-
-  };
-
+  //handle
   const completeTodo = (index) => {
     const newTodos = [...todos];
     newTodos[index].isCompleted = true;
@@ -82,39 +112,15 @@ function App() {
 
   };
 
-  // const removeTodoe = (index) => {
-  //   const newTodos = [...todos];
-  //   newTodos.splice(index, 1);
-  //   setTodos(newTodos);
-  // };
-
-  const removeTodo = async (index,id) => {
-    const response = await axios.delete(`/todo/${id}`).catch((err) => {
-      console.log("Error deleting: ", err);
-    });
-
-    if (response) {
-      const newTodos = [...todos];
-        newTodos.splice(index, 1);
-        setTodos(newTodos);
-    };
-  };
-
-  const handleUpdateText = (todo, index) => {
-    setIndexEdit(index)
+  const handleUpdateText = async (todo, index, id) => {
+    const putData = {...todo};
+    delete putData.id;
+    setIndexEdit(index);
+    setItemEdit(todo);
     refInput.current.handleValueText(todo.text)
-    }
-
-  const handleUpdate = (indexEdit, value, id) => {
-    const newTodos = todos.map((item, index) => {
-      if(index === indexEdit) {
-        return {...item, text: value}
-      } else return item
-    })
-    // console.log('newTodos', newTodos);
-    setTodos(newTodos);
-    setIndexEdit(null);
   }
+
+
   const handleStatus = (type) => {
     setStatus(type)
   }
@@ -126,7 +132,6 @@ function App() {
     todos.map((item, index) => {
       item.isCompleted = true
     });
-
     setTodos([...todos]);
   };
   const onClickCheckAllItem = () => {
@@ -153,7 +158,6 @@ function App() {
                     handleUpdate={handleUpdateText}
                     completeTodo={completeTodo}
                     removeTodo={removeTodo}
-
                 />
 
             ))}
