@@ -18,8 +18,7 @@ function App() {
   const [status, setStatus] = useState(TYPE_STATUS.All)
   const [allDone, setAllDone] = useState(false)
   const [itemEdit, setItemEdit] = useState(null);
-
-  // API
+  // API (Promise)
   const getTodos = async () => {
     const response = await axios.get("/todo").catch((err) => {
       console.log("Error:", err);
@@ -27,6 +26,7 @@ function App() {
     if (response && response.data) {
       setTodos(response.data);
       console.log("todo:",todos)
+      console.log('response:', response); // MongLV log fix bug
     }
   };
 
@@ -82,6 +82,61 @@ function App() {
       } else alert(response.statusText)
     } else alert('Ko co id')
   }
+  const completeTodo = async (index, todo) => {
+    const response = await axios.put(`/todo/${todo.id}`, {...todo, isCompleted: true}).catch((err) => {
+      console.log("Error Decorated: ", err);
+    });
+    console.log('response', response);
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = true;
+    setTodos(newTodos);
+  };
+
+  const removeCompletedAll = async () => {
+    console.log('todosX', todos); // MongLV log fix bug
+    for (const item of todos) {
+      console.log('item:', item.id); // MongLV log fix bug
+      if (item.isCompleted === true) {
+        const response = await axios.put(`/todo/${item.id}`, {...item, isCompleted: false}).catch((err) => {
+          console.log("RemoveAll Fail: ", err);
+
+        });item.isCompleted = false;
+      }
+    }
+    console.log('todoXa', todos);
+    setTodos([...todos])
+  }
+
+  const completedAll = async () => {
+    console.log('todosT', todos); // MongLV log fix bug
+
+    for (const item of todos) {
+      console.log('item:', item.id); // MongLV log fix bug
+      if (item.isCompleted === false) {
+        const response = await axios.put(`/todo/${item.id}`, {...item, isCompleted: true}).catch((err) => {
+          console.log("TickAll Fail: ", err);
+
+        });item.isCompleted = true;
+      }
+    }
+    console.log('todoTa', todos);
+    setTodos([...todos])
+    // todos.map((item, index) => {
+    //   item.isCompleted = true
+    // });
+    // setTodos([...todos]);
+  };
+  const removeAllToDoCompleted = async () => {
+    for (const item of todos) {
+      console.log('item:', item.id); // MongLV log fix bug
+      if (item.isCompleted === true) {
+        const response = await axios.delete(`/todo/${item.id}`).catch((err) => {
+          console.log("RemoveAll Fail: ", err);
+        });
+      }
+    }
+    setTodos(todos.filter((num) => !num.isCompleted))
+  };
 
   // lifecycle
   React.useEffect(() => {
@@ -105,18 +160,12 @@ function App() {
   }
 
   //handle
-  const completeTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].isCompleted = true;
-    setTodos(newTodos);
 
-  };
 
   const handleUpdateText = async (todo, index) => {
-    const putData = {...todo};
-    delete putData.id;
     setIndexEdit(index);
     setItemEdit(todo);
+    console.log('todo', todo); // MongLV log fix bug
     refInput.current.handleValueText(todo.text)
   }
 
@@ -124,18 +173,19 @@ function App() {
   const handleStatus = (type) => {
     setStatus(type)
   }
-  const removeCompletedAll = () => {
-    todos.map((item, index) => {item.isCompleted = false});
-    setTodos([...todos])
-  };
-  const completedAll = () => {
-    todos.map((item, index) => {
-      item.isCompleted = true
-    });
-    setTodos([...todos]);
-  };
+  // const removeCompletedAll = () => {
+  //   todos.map((item, index) => {item.isCompleted = false});
+  //   setTodos([...todos])
+  // };
+  // const completedAll = () => {
+  //   todos.map((item, index) => {
+  //     item.isCompleted = true
+  //   });
+  //   setTodos([...todos]);
+  // };
   const onClickCheckAllItem = () => {
     setAllDone(!allDone)
+    console.log('allDone', allDone); // MongLV log fix bug
     if (allDone) {
       removeCompletedAll();
     } else {
@@ -143,11 +193,11 @@ function App() {
     }
   };
 
-  const removeAllToDoCompleted = () => {
-    setTodos(todos.filter((num) => !num.isCompleted))
-  };
+  // const removeAllToDoCompleted = () => {
+  //   setTodos(todos.filter((num) => !num.isCompleted))
+  // };
 
-    return (
+  return (
         <div className="app">
           <div className="todo-list">
             {filterByStatus().map((todo, index) => (

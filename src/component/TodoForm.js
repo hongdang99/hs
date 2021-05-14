@@ -6,7 +6,7 @@ function TodoForm(props) {
     const [value, setValue] = useState("");
 
     const handleSubmit = (event) => {
-        console.log('event:', event);
+        // console.log('event:', event);
         event.preventDefault();
         // edit
         if(indexEdit) {
