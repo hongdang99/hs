@@ -15,7 +15,7 @@ function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
             {todo.text}
 
             <div>
-                <button onClick={() => handleUpdate(todo, index, todo.id)}>Edit</button>
+                <button onClick={() => handleUpdate(todo, index)}>Edit</button>
                 <button onClick={() => completeTodo(index, todo)}>Complete</button>
                 <button onClick={() => removeTodo(index,todo.id)}>x</button>
             </div>
