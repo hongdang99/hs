@@ -12,15 +12,18 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 
 import allReducers from './reducers/allReducers';
 import App2 from "./App2";
+import BasicExample from "./route/example";
 
 // Store
 let store = createStore(allReducers, composeWithDevTools());
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
-          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-              <App />
-              <App2 />
+          {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>*/}
+          <div>
+              {/*<App />*/}
+              {/*<App2 />*/}
+              <BasicExample/>
           </div>
       </Provider>
   </React.StrictMode>,

@@ -1,23 +1,23 @@
 import React from 'react';
 import {axios} from "../axios";
-// import PropTypes from 'prop-types';
 import {useDispatch, useSelector} from 'react-redux'
-import TYPE_ACTION from "../actions/TypeAction";
+import {add, complete, deleteAllTodoCompleted, get, remove, turnCompletedAll, unCompletedAll, update} from "../actions";
+import TYPE_STATUS from "../util/Type_Status";
+function useDataRequest(props) {
 
-function useDataRequest() {
     // hooks
     const dispatch = useDispatch();
-    const todos = useSelector(state => state['todos'])
+    const todos = useSelector(state => state['todos']);
+    const itemEdit = useSelector(state1 => state1['itemEdit'])
 
     // handle logic
     const getTodos = async () => {
         const response = await axios.get("/todo").catch((err) => {
             console.log("Error:", err);
         });
-        if (response && response.data) {
-            // redux
-            dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: response.data}})
-        }
+        // redux
+            dispatch(get(response.data))
+
     };
 
     const addTodo = async (value) => {
@@ -29,22 +29,17 @@ function useDataRequest() {
         const response = await axios.post("/todo", dataDefault).catch((err) => {
             console.log("Error: ", err);
         });
-
-        if (response && response.data && typeof response.data === 'object') {
             const newTodos = [...todos, response.data];
-            dispatch({type: TYPE_ACTION.TODO.POST, payload: {data: [...newTodos]}})
-        }
+            dispatch(add([...newTodos]))
     };
 
     const removeTodo = async (index,id) => {
         const response = await axios.delete(`/todo/${id}`).catch((err) => {
             console.log("Error deleting: ", err);
         });
-        if (response) {
             const newTodos = [...todos];
             newTodos.splice(index, 1);
-            dispatch({type: TYPE_ACTION.TODO.DELETE, payload: {data: [...newTodos]}})
-        }
+            dispatch(remove([...newTodos]))
     };
 
     const handleUpdate = async (indexEdit, value, callBackUpdate, itemEdit) => {
@@ -52,15 +47,13 @@ function useDataRequest() {
             const response = await axios.put(`/todo/${itemEdit.id}`, {...itemEdit, text: value}).catch((err) => {
                 console.log("Error deleting: ", err);
             });
-            if(response && (response.status === 200 || response.statusText === 'OK')) {
                 const newTodos = todos.map((item, index) => {
                     if(index === indexEdit) {
                         return {...item, text: value}
                     } else return item
                 })
-                dispatch({type: TYPE_ACTION.TODO.UPDATE, payload: {data: [...newTodos]}})
+                dispatch(update([...newTodos]))
                 callBackUpdate();
-            } else alert(response.statusText)
         } else alert('Ko co id')
     };
 
@@ -71,7 +64,7 @@ function useDataRequest() {
         console.log('response', response);
         const newTodos = [...todos];
         newTodos[index].isCompleted = true;
-        dispatch({type: TYPE_ACTION.TODO.UPDATE, payload: {data: newTodos}})
+        dispatch(complete(newTodos))
     };
 
     const removeCompletedAll = async () => {
@@ -81,17 +74,12 @@ function useDataRequest() {
                 await axios.put(`/todo/${item.id}`, {...item, isCompleted: false}).catch((err) => {
                     console.log("RemoveAll Fail: ", err);
                 });
-                // if(response) {
-                //     item.isCompleted = false;
-                // }
-
             }
         }
-        dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: [...todos]}})
+        dispatch(unCompletedAll([...todos]))
     };
 
     const completedAll = async () => {
-
         for (const item of todos) {
             if (item.isCompleted === false) {
                 const response = await axios.put(`/todo/${item.id}`, {...item, isCompleted: true}).catch((err) => {
@@ -101,7 +89,7 @@ function useDataRequest() {
                 }
             }
         }
-        dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: [...todos]}})
+        dispatch(turnCompletedAll([...todos]))
     };
 
     const removeAllToDoCompleted = async () => {
@@ -113,11 +101,29 @@ function useDataRequest() {
                 });
             }
         }
-        getTodos(todos.filter((num) => !num.isCompleted))
+        // getTodos(todos.filter((num) => !num.isCompleted))
+        dispatch(deleteAllTodoCompleted(todos.filter((num) => !num.isCompleted)))
 
     };
+    const filterByStatus = (status) => {
+        let toDoListCompleted;
+        switch (status) {
+            case TYPE_STATUS.Active:
+                return todos.filter(item => item.isCompleted === false)
+            case TYPE_STATUS.Completed:
+                return toDoListCompleted = todos.filter(item => item.isCompleted === true)
+            default:
+                return todos;
+        }
+    };
 
-    return ({todos, getTodos, addTodo, removeTodo, handleUpdate, completeTodo, removeCompletedAll, completedAll, removeAllToDoCompleted});
+    React.useEffect(() => {
+        getTodos();
+    }, []);
+
+
+
+    return ({todos, itemEdit,getTodos, addTodo, removeTodo, handleUpdate, completeTodo, removeCompletedAll, completedAll, removeAllToDoCompleted, filterByStatus, });
 }
 
 export default useDataRequest;

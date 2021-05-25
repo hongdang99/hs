@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+import useDataRequest from "../hooks/useDataRequest";
 // import ".App.css";
 
 function TodoForm(props) {
-    const { addTodo, refCallback, indexEdit, handleUpdate } = props;
+    const {todos,
+        addTodo,
+        handleUpdate,
+    } = useDataRequest();
+
+    const { refCallback, indexEdit} = props;
     const [value, setValue] = useState("");
 
     const handleSubmit = (event) => {
@@ -33,7 +39,7 @@ function TodoForm(props) {
     },[])
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form  onSubmit={handleSubmit}>
             <input
                 type="text"
                 className="input"

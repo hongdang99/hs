@@ -2,12 +2,14 @@
   background: #e3e2e8;
   padding: 30px;
   height: 100vh;
+  display: inline-block;
 }
 .todo-list {
   background: #947b7b;
   border-radius: 4px;
   padding: 5px;
   max-width: 400px;
+  display: inline-block;
 }
 
 .todo {
@@ -20,10 +22,41 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  display: inline-block;
 }
 .input{
   display: flex;
   size:landscape;
   flex: auto;
   width: 392px;
+  display: inline-block;
+}
+.todosearch {
+  background: rgb(207, 196, 197);
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+  padding: 3px 10px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+  align-items: baseline;
+  justify-content: space-between;
+  display: inline-block;
+}
+.infor{
+  size:portrait;
+  flex: auto;
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  background: rgb(168, 146, 148);
+  text-align: center;
+}
+#searchForm{
+
+  border-radius: 4px;
+  padding: 5px;
+  max-width: 400px;
+  display: flex;
+  text-align: center;
+
 }

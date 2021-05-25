@@ -11,6 +11,14 @@ const TodoReducers = (todos = [], action) => {
             return action.payload.data;
         case TYPE_ACTION.TODO.DELETE:
             return action.payload.data;
+        case TYPE_ACTION.TODO.COMPLETE_TODO:
+            return action.payload.data;
+        case TYPE_ACTION.TODO.UNCOMPLETED_ALL:
+            return action.payload.data;
+        case TYPE_ACTION.TODO.TURN_COMPLETED_ALL:
+            return action.payload.data;
+        case TYPE_ACTION.TODO.DELETE_ALL_TODO_COMPLETED:
+            return action.payload.data;
         default:
             return todos;
     }

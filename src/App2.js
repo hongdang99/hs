@@ -4,7 +4,13 @@ import Todo from "./component/Todo.js"
 import TodoForm from "./component/TodoForm.js"
 import { axios } from "./axios";
 import { connect } from "react-redux";
-import TYPE_ACTION from "./actions/TypeAction";
+import {mapStateToProps, mapDispatchToProps} from "./App2/Container";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
 
 const TYPE_STATUS = {
     Active: 'Active',
@@ -13,7 +19,7 @@ const TYPE_STATUS = {
 }
 
 function App2(props) {
-    const {todos, deleteTodo, postTodo, putTodo, setTodos} = props;
+    const {todos, get, add, update, remove, complete, unCompletedAll, turnCompletedAll, deleteAllTodoCompleted} = props;
 
     // state
     const [indexEdit, setIndexEdit] = useState(null)
@@ -26,9 +32,7 @@ function App2(props) {
             console.log("Error:", err);
         });
         if (response && response.data) {
-            setTodos(response.data);
-            console.log("todo:",todos)
-            console.log('response:', response); // MongLV log fix bug
+            get(response.data);
         }
     };
 
@@ -42,13 +46,10 @@ function App2(props) {
         const response = await axios.post("/todo", dataDefault).catch((err) => {
             console.log("Error: ", err);
         });
-
-        if (response && response.data && typeof response.data === 'object') {
-            console.log('response', response);
             const newTodos = [...todos, response.data];
-            setTodos(newTodos);
-            // console.log('todos', todos);
-        }
+            add(newTodos);
+
+
 
     };
 
@@ -61,7 +62,7 @@ function App2(props) {
             console.log('response', response);
             const newTodos = [...todos];
             newTodos.splice(index, 1);
-            setTodos(newTodos);
+            remove(newTodos);
         };
     };
 
@@ -78,7 +79,7 @@ function App2(props) {
                     } else return item
                 })
                 // console.log('newTodos', newTodos);
-                setTodos(newTodos);
+                update(newTodos);
                 setIndexEdit(null);
                 setItemEdit(null);
             } else alert(response.statusText)
@@ -91,7 +92,7 @@ function App2(props) {
         console.log('response', response);
         const newTodos = [...todos];
         newTodos[index].isCompleted = true;
-        setTodos(newTodos);
+        complete(newTodos);
     };
 
     const removeCompletedAll = async () => {
@@ -106,14 +107,11 @@ function App2(props) {
             }
         }
         console.log('todoXa', todos);
-        setTodos([...todos])
+        unCompletedAll([...todos])
     }
 
     const completedAll = async () => {
-        console.log('todosT', todos); // MongLV log fix bug
-
         for (const item of todos) {
-            console.log('item:', item.id); // MongLV log fix bug
             if (item.isCompleted === false) {
                 const response = await axios.put(`/todo/${item.id}`, {...item, isCompleted: true}).catch((err) => {
                     console.log("TickAll Fail: ", err);
@@ -122,7 +120,7 @@ function App2(props) {
             }
         }
         console.log('todoTa', todos);
-        setTodos([...todos])
+        turnCompletedAll([...todos])
         // todos.map((item, index) => {
         //   item.isCompleted = true
         // });
@@ -137,7 +135,7 @@ function App2(props) {
                 });
             }
         }
-        setTodos(todos.filter((num) => !num.isCompleted))
+        deleteAllTodoCompleted(todos.filter((num) => !num.isCompleted))
     };
 
     // lifecycle
@@ -200,6 +198,7 @@ function App2(props) {
     // };
 
     return (
+
         <div className="app">
             <h1>Xử lý theo kiểu truyền thống</h1>
             <div className="todo-list">
@@ -215,12 +214,12 @@ function App2(props) {
 
                 ))}
 
-                <TodoForm
-                    addTodo={addTodo}
-                    indexEdit={indexEdit}
-                    refCallback={refInput}
-                    handleUpdate={handleUpdate}
-                />
+                {/*<TodoForm*/}
+                {/*    addTodo={addTodo}*/}
+                {/*    indexEdit={indexEdit}*/}
+                {/*    refCallback={refInput}*/}
+                {/*    handleUpdate={handleUpdate}*/}
+                {/*/>*/}
 
                 <button onClick={() => handleStatus(TYPE_STATUS.All)}>{TYPE_STATUS.All}</button>
                 <button onClick={() => handleStatus(TYPE_STATUS.Completed)}>{TYPE_STATUS.Completed}</button>
@@ -232,21 +231,5 @@ function App2(props) {
         </div>
     );
 }
-
-
-// components
-const mapStateToProps = (state) => {
-    const todos = state['todos'];
-    return {
-        todos,
-    }
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    setTodos: (todos) => dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: todos}}),
-    putTodo: (todos) => dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: todos}}),
-    postTodo: (todos) => dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: todos}}),
-    deleteTodo: (todos) => dispatch({type: TYPE_ACTION.TODO.GET, payload: {data: todos}}),
-});
 
 export default connect(mapStateToProps, mapDispatchToProps)(App2);
