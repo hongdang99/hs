@@ -3,46 +3,36 @@ import {axios} from "../axios";
 import {useDispatch, useSelector} from 'react-redux'
 import {add, complete, deleteAllTodoCompleted, get, remove, turnCompletedAll, unCompletedAll, update} from "../actions";
 import TYPE_STATUS from "../util/Type_Status";
+import TYPE_ACTION from "../actions/TypeAction";
 function useDataRequest(props) {
 
     // hooks
     const dispatch = useDispatch();
     const todos = useSelector(state => state['todos']);
     const itemEdit = useSelector(state1 => state1['itemEdit'])
+    const value = useSelector(state1 => state1['value'])
 
     // handle logic
-    const getTodos = async () => {
-        const response = await axios.get("/todo").catch((err) => {
-            console.log("Error:", err);
-        });
-        // redux
-            dispatch(get(response.data))
-
-    };
+    const getTodos = () => dispatch({type: TYPE_ACTION.TODO.GET_SAGA});
 
     const addTodo = async (value) => {
         const dataDefault = {
             text: value,
             isCompleted: false,
         };
-        // console.log("text:",text);
-        const response = await axios.post("/todo", dataDefault).catch((err) => {
-            console.log("Error: ", err);
-        });
-            const newTodos = [...todos, response.data];
-            dispatch(add([...newTodos]))
+        dispatch({
+            type: TYPE_ACTION.TODO.POST_SAGA,
+            data: dataDefault
+        })
     };
 
     const removeTodo = async (index,id) => {
-        const response = await axios.delete(`/todo/${id}`).catch((err) => {
-            console.log("Error deleting: ", err);
-        });
-            const newTodos = [...todos];
-            newTodos.splice(index, 1);
-            dispatch(remove([...newTodos]))
+
+            dispatch({type:TYPE_ACTION.TODO.DELETE_SAGA, payload: {index, id}})
     };
 
     const handleUpdate = async (indexEdit, value, callBackUpdate, itemEdit) => {
+        debugger
         if(itemEdit && itemEdit.id) {
             const response = await axios.put(`/todo/${itemEdit.id}`, {...itemEdit, text: value}).catch((err) => {
                 console.log("Error deleting: ", err);

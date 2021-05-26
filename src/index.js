@@ -7,15 +7,24 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from 'react-redux';
 
+// saga
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './saga'
+
 // tool
 import {composeWithDevTools} from 'redux-devtools-extension';
-
 import allReducers from './reducers/allReducers';
 import App2 from "./App2";
+
+//Router
 import BasicExample from "./route/example";
 
+
+
+const sagaMiddleware = createSagaMiddleware()
 // Store
-let store = createStore(allReducers, composeWithDevTools());
+let store = createStore(allReducers, composeWithDevTools(applyMiddleware(sagaMiddleware)));
+sagaMiddleware.run(rootSaga);
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>

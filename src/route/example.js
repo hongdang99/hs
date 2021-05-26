@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import App from "../App";
 import SearchForm from "../component/SearchForm"
+import AddForm from "../component/AddForm";
 
 // This site has 3 pages, all of which are rendered
 // dynamically in the browser (not server rendered).
@@ -30,6 +31,9 @@ export default function BasicExample() {
                     <li>
                         <Link to="/search">Search</Link>
                     </li>
+                    <li>
+                        <Link to="/input">Input</Link>
+                    </li>
                 </ul>
                 <hr />
 
@@ -45,8 +49,10 @@ export default function BasicExample() {
                         <div style={{textAlign: "center"}}><App /></div>
                     </Route>
                     <Route exact path="/search">
-
                         <div style={{textAlign: "center"}}><SearchForm /></div>
+                    </Route>
+                    <Route exact path="/input">
+                        <div style={{textAlign: "center"}}><AddForm /></div>
                     </Route>
                 </Switch>
             </div>

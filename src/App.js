@@ -24,6 +24,7 @@ function App() {
     removeAllToDoCompleted,
     filterByStatus,
 
+
   } = useDataRequest();
 
   // state
@@ -37,7 +38,10 @@ function App() {
     setIndexEdit(null);
     setItemEdit(null);
   }
-  const handleClickUpdate = (indexEdit, value) => handleUpdate(indexEdit, value, callBackUpdate, itemEdit);
+  const handleClickUpdate = (indexEdit, value) => {
+    debugger; // Todo by MongLV
+    handleUpdate(indexEdit, value, callBackUpdate, itemEdit);
+  }
 
   // ref
   const refInput = React.useRef();
@@ -47,6 +51,7 @@ function App() {
   }
 
   const handleUpdateText = (todo, index) => {
+    debugger;
     setIndexEdit(index);
     setItemEdit(todo);
     refInput.current.handleValueText(todo.text)
@@ -80,7 +85,7 @@ function App() {
             ))}
 
             <TodoForm
-                addTodo={addTodo}
+                // addTodo={addTodo}
                 indexEdit={indexEdit}
                 refCallback={refInput}
                 handleUpdate={handleClickUpdate}

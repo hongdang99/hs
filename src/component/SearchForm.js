@@ -43,7 +43,7 @@ function SearchForm(){
         <div className="searchForm">
             <div>
                 <label>Search:</label>
-                <input type="text" onChange={(event) =>handleSearch(event)} />
+                <input type="text" placeholder="On your wish" onChange={(event) =>handleSearch(event)} />
             </div>
             <div className="infor">
                 {String(info.id)}

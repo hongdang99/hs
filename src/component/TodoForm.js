@@ -3,27 +3,17 @@ import useDataRequest from "../hooks/useDataRequest";
 // import ".App.css";
 
 function TodoForm(props) {
-    const {todos,
-        addTodo,
-        handleUpdate,
-    } = useDataRequest();
+    const {handleUpdate} = props;
 
     const { refCallback, indexEdit} = props;
     const [value, setValue] = useState("");
-
+    debugger; // Todo by MongLV
     const handleSubmit = (event) => {
-        // console.log('event:', event);
         event.preventDefault();
-        // edit
         if(indexEdit) {
             handleUpdate(indexEdit, value)
-        } else {
-            // Add
-            if (!value) return;
-            addTodo(value);
         }
         setValue("");
-
     };
     const handleInput = (event) => {
         setValue(event.target.value)
@@ -40,12 +30,12 @@ function TodoForm(props) {
 
     return (
         <form  onSubmit={handleSubmit}>
-            <input
+            {indexEdit && <input
                 type="text"
                 className="input"
                 value={value}
                 onChange={handleInput}
-            />
+            />}
         </form>
     );
 }

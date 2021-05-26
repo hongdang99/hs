@@ -6,11 +6,13 @@ const TodoReducers = (todos = [], action) => {
         case TYPE_ACTION.TODO.GET:
             return action.payload.data;
         case TYPE_ACTION.TODO.POST:
-            return action.payload.data;
+            todos.push(action.payload.data);
+            return [...todos];
         case TYPE_ACTION.TODO.UPDATE:
             return action.payload.data;
         case TYPE_ACTION.TODO.DELETE:
-            return action.payload.data;
+            todos.splice(action.payload.index, 1)
+            return [...todos];
         case TYPE_ACTION.TODO.COMPLETE_TODO:
             return action.payload.data;
         case TYPE_ACTION.TODO.UNCOMPLETED_ALL:

@@ -1,4 +1,4 @@
-import TYPE_ACTION from "./TypeAction"
+import TYPE_ACTION from "./../actions/TypeAction"
 
 export const get = (data) => ({
     type: TYPE_ACTION.TODO.GET,
