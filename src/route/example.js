@@ -1,11 +1,10 @@
 import React from "react";
-import App2 from "./../App2";
-import TodoForm from "./../component/TodoForm"
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Prompt,
 } from "react-router-dom";
 import App from "../App";
 import SearchForm from "../component/SearchForm"
