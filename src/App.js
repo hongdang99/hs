@@ -1,21 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, {useState} from "react";
 import "./App.css";
 import Todo from "./component/Todo.js"
 import TodoForm from "./component/TodoForm.js"
-import { axios } from "./axios";
 import useDataRequest from "./hooks/useDataRequest";
 import TYPE_STATUS from "./util/Type_Status";
-// const TYPE_STATUS = {
-//   Active: 'Active',
-//   Completed: 'Completed',
-//   All: 'All'
-// }
 
 function App() {
   // hooks
   const {todos,
-    // getTodos,
-    addTodo,
+    getTodos,
     removeTodo,
     handleUpdate,
     completeTodo,
@@ -23,14 +16,11 @@ function App() {
     completedAll,
     removeAllToDoCompleted,
     filterByStatus,
-
-
   } = useDataRequest();
 
   // state
   const [indexEdit, setIndexEdit] = useState(null)
   const [status, setStatus] = useState(TYPE_STATUS.All)
-  const [allDone, setAllDone] = useState(false)
   const [itemEdit, setItemEdit] = useState(null);
 
   // func handle
@@ -39,7 +29,6 @@ function App() {
     setItemEdit(null);
   }
   const handleClickUpdate = (indexEdit, value) => {
-    debugger; // Todo by MongLV
     handleUpdate(indexEdit, value, callBackUpdate, itemEdit);
   }
 
@@ -51,17 +40,19 @@ function App() {
   }
 
   const handleUpdateText = (todo, index) => {
-    debugger;
     setIndexEdit(index);
     setItemEdit(todo);
     refInput.current.handleValueText(todo.text)
   }
 
-
+  React.useEffect(() => {
+    getTodos();
+  }, []);
 
   const onClickCheckAllItem = () => {
-    setAllDone(!allDone)
-    if (allDone) {
+    const done = todos.filter(item => item.isCompleted === true)
+    const comp = todos.length === done.length ? '1' : '0';
+    if (comp==='1') {
       removeCompletedAll();
     } else {
       completedAll();

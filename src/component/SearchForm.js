@@ -1,62 +1,58 @@
 import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {get} from "../actions";
-import axios from "axios";
-import useDataRequest from "../hooks/useDataRequest";
+import {axios} from "../axios";
 import "./../component/component.css"
-import Todo from "./Todo";
 import "./../App.css"
 
-function SearchForm(){
-    const {todos, completeTodo, removeTodo, getTodo} = useDataRequest()
 
+function SearchForm(){
 
     const [allData, setAllData] = useState([]);
     const [filteredData, setFilteredData] = useState(allData);
-    const [info, setInfo] = useState({});
+    const [info, setInfo] = useState(null);
     const handleSearch = (event) =>{
         let value = event.target.value.toLowerCase();
         let result = [];
-        console.log(value);
         result = allData.filter((data) => {
             return data.text.search(value) != -1;
         });
         setFilteredData(result);
     }
     const handleFocus= (value) =>{
-
         setInfo(value);
-        console.log("info:",info)
+    }
+    const handleExit = () => {
+        setInfo(null)
     }
     React.useEffect(() => {
-        axios('https://609b7dc92b549f00176e386b.mockapi.io/todo')
+        axios.get('/todo')
             .then(response => {
-                console.log(response.data)
                 setAllData(response.data);
-                setFilteredData(response.data)  ;
-
+                setFilteredData(response.data);
+                console.log('info:', info); // See Log
             }).catch(error => {
             console.log('Error getting fake data: ' + error);
         })
     }, []);
     return(
-        <div className="searchForm">
+        <div className="todo-list">
             <div>
                 <label>Search:</label>
                 <input type="text" placeholder="On your wish" onChange={(event) =>handleSearch(event)} />
             </div>
-            <div className="infor">
+            {(info != null) && <div className="infor">
+                <button className="exit" onClick={() => handleExit()}>Exit</button>
+                <br />
                 {String(info.id)}
                 <br />
                 {String(info.isCompleted)}
                 <br />
                 {info.text}
-            </div>
+            </div>}
             <div>
                 {filteredData.map((value,index)=>{
                     return(
                         <ul key={value.id}>
-                            <span className="todosearch" >
+                            <span className="todo" >
                                 {value.text}
                                 <button onClick={() => handleFocus(value)}>Show</button>
                             </span>

@@ -7,7 +7,6 @@ function TodoForm(props) {
 
     const { refCallback, indexEdit} = props;
     const [value, setValue] = useState("");
-    debugger; // Todo by MongLV
     const handleSubmit = (event) => {
         event.preventDefault();
         if(indexEdit) {
@@ -30,7 +29,7 @@ function TodoForm(props) {
 
     return (
         <form  onSubmit={handleSubmit}>
-            {indexEdit && <input
+            {(indexEdit || indexEdit==0) && <input
                 type="text"
                 className="input"
                 value={value}

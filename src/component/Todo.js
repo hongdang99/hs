@@ -5,7 +5,6 @@ import React, {useEffect} from "react";
 
 
 function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
-    debugger; // Todo by MongLV
     if(!(todo && todo.id)) return null;
     return (
         <div

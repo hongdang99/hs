@@ -2,8 +2,30 @@
 import { all } from "redux-saga/effects";
 
 // saga
-import { WatchGetTodosSaga, WatchAddTodoSaga, WatchRemoveTodo } from "./todoSaga";
+import {
+    watchGetTodosSaga,
+    watchAddTodoSaga,
+    watchRemoveTodo,
+    watchHandleUpdate,
+    watchCompleteTodo,
+    watchRemoveCompletedAll,
+    watchTurnCompletedAll,
+    watchRemoveAllToDoCompleted,
+    watchRemoveCompletedAllCallAPI,
+    watchTurnCompletedAllCallAPI
+} from "./todoSaga";
 
 export default function* rootSaga() {
-    yield all([WatchGetTodosSaga(), WatchAddTodoSaga(), WatchRemoveTodo()]);
+    yield all([
+        watchGetTodosSaga(),
+        watchAddTodoSaga(),
+        watchRemoveTodo(),
+        watchHandleUpdate(),
+        watchCompleteTodo(),
+        watchRemoveCompletedAll(),
+        watchTurnCompletedAll(),
+        watchRemoveAllToDoCompleted(),
+        watchRemoveCompletedAllCallAPI(),
+        watchTurnCompletedAllCallAPI()
+    ]);
 }
