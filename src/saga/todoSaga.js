@@ -12,8 +12,8 @@ function* doGetTodosSaga(){
 }
 
 function* doAddTodoSaga(action){
-    console.log('action:', action); // See Log
-    const response = yield axios.post("/todo", action.data).catch((err) => {
+    console.log('action:', action.payload); // See Log
+    const response = yield axios.post("/todo", action.payload).catch((err) => {
             console.log("Error: ", err);
         });
         yield put(add(response.data))

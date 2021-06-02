@@ -12,7 +12,7 @@ import {
     watchTurnCompletedAll,
     watchRemoveAllToDoCompleted,
     watchRemoveCompletedAllCallAPI,
-    watchTurnCompletedAllCallAPI
+    watchTurnCompletedAllCallAPI,
 } from "./todoSaga";
 
 export default function* rootSaga() {
@@ -26,6 +26,6 @@ export default function* rootSaga() {
         watchTurnCompletedAll(),
         watchRemoveAllToDoCompleted(),
         watchRemoveCompletedAllCallAPI(),
-        watchTurnCompletedAllCallAPI()
+        watchTurnCompletedAllCallAPI(),
     ]);
 }

@@ -9,7 +9,10 @@ function AddForm (){
     } = useDataRequest();
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (!data) return;
+        if (!data){
+            alert("Type something now bitch!!!!")
+            return;
+        }
         addTodo(data);
         setData("");
         setIsBlocking(false)
@@ -21,7 +24,7 @@ function AddForm (){
     }
 
     return (
-        <form  onSubmit={handleSubmit}>
+        <form className="todo-list" onSubmit={handleSubmit}>
             <Prompt
                 when={isBlocking}
                 message={location =>

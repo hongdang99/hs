@@ -4,24 +4,50 @@ import Todo from "./component/Todo.js"
 import TodoForm from "./component/TodoForm.js"
 import useDataRequest from "./hooks/useDataRequest";
 import TYPE_STATUS from "./util/Type_Status";
+import {  getFilterByStatus } from "./reselect/connector";
+import {createSelector} from "reselect";
+import {useSelector} from "react-redux";
+
+// const selectStatus = createSelector(
+//     (state, status) => status,
+//     status => status,
+// )
+// const getFilterByStatus = createSelector(
+//     [selectTodo, selectStatus],
+//     (todos, status) => {
+//       debugger; // Stop st
+//       switch (status) {
+//         case TYPE_STATUS.Active:
+//           debugger; // Stop st
+//           console.log('here:'); // See Log
+//           return todos.filter(item => item.isCompleted === false)
+//         case TYPE_STATUS.Completed:
+//           return todos.filter(item => item.isCompleted === true)
+//         default:
+//           return todos;
+//       }
+//     }
+// )
 
 function App() {
   // hooks
-  const {todos,
+  const {
     getTodos,
     removeTodo,
     handleUpdate,
     completeTodo,
-    removeCompletedAll,
-    completedAll,
     removeAllToDoCompleted,
-    filterByStatus,
+    onClickCheckAllItem,
+    // filterByStatus,
   } = useDataRequest();
-
   // state
   const [indexEdit, setIndexEdit] = useState(null)
   const [status, setStatus] = useState(TYPE_STATUS.All)
   const [itemEdit, setItemEdit] = useState(null);
+
+  const filterByStatus = useSelector((state) => getFilterByStatus(state, status));
+  console.log('filterByStatus:', filterByStatus); // See Log
+
 
   // func handle
   const callBackUpdate = () => {
@@ -49,21 +75,25 @@ function App() {
     getTodos();
   }, []);
 
-  const onClickCheckAllItem = () => {
-    const done = todos.filter(item => item.isCompleted === true)
-    const comp = todos.length === done.length ? '1' : '0';
-    if (comp==='1') {
-      removeCompletedAll();
-    } else {
-      completedAll();
-    }
-  };
+
+  // console.log('getFilterByStatus:', getFilterByStatus); // See Log
+
+  // const onClickCheckAllItem = () => {
+  //   const done = todos.filter(item => item.isCompleted === true)
+  //   const comp = todos.length === done.length ? '1' : '0';
+  //   if (comp==='1') {
+  //     removeCompletedAll();
+  //   } else {
+  //     completedAll();
+  //   }
+  // };
+
 
   return (
         <div className="app">
           <h1>Xử lý theo kiểu hooks</h1>
           <div className="todo-list">
-            {filterByStatus(status).map((todo, index) => (
+            {filterByStatus.map((todo, index) => (
                 <Todo
                     key={index}
                     index={index}
@@ -72,11 +102,9 @@ function App() {
                     completeTodo={completeTodo}
                     removeTodo={removeTodo}
                 />
-
             ))}
 
             <TodoForm
-                // addTodo={addTodo}
                 indexEdit={indexEdit}
                 refCallback={refInput}
                 handleUpdate={handleClickUpdate}

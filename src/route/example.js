@@ -9,6 +9,7 @@ import {
 import App from "../App";
 import SearchForm from "../component/SearchForm"
 import AddForm from "../component/AddForm";
+import "./../App.css"
 
 // This site has 3 pages, all of which are rendered
 // dynamically in the browser (not server rendered).

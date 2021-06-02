@@ -19,7 +19,8 @@ import App2 from "./App2";
 //Router
 import BasicExample from "./route/example";
 
-
+//immutable
+import { List, Map } from 'immutable';
 
 const sagaMiddleware = createSagaMiddleware()
 // Store

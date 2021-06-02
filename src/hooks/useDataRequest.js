@@ -1,15 +1,19 @@
 import React from 'react';
-import {axios} from "../axios";
 import {useDispatch, useSelector} from 'react-redux'
-import {add, complete, deleteAllTodoCompleted, get, remove, turnCompletedAll, unCompletedAll, update} from "../actions";
+import {selectTodo, selectStatus, getFilterByStatus} from "./../reselect/connector"
+
 import TYPE_STATUS from "../util/Type_Status";
 import TYPE_ACTION from "../actions/TypeAction";
-function useDataRequest(props) {
+import {createSelector} from "reselect";
+
+
+function useDataRequest() {
 
     // hooks
     const dispatch = useDispatch();
-    const todos = useSelector(state => state['todos']);
-    const itemEdit = useSelector(state1 => state1['itemEdit'])
+    const todos = useSelector(selectTodo);
+    // const status = useSelector(selectStatus)
+    // const filterByStatus = useSelector(getFilterByStatus)
 
     // handle logic
     const getTodos = () => dispatch({type: TYPE_ACTION.TODO.GET_SAGA});
@@ -36,18 +40,43 @@ function useDataRequest(props) {
         dispatch({type: TYPE_ACTION.TODO.DELETE_ALL_TODO_COMPLETED_SAGA})
     };
 
-    const filterByStatus = (status) => {
-        switch (status) {
-            case TYPE_STATUS.Active:
-                return todos.filter(item => item.isCompleted === false)
-            case TYPE_STATUS.Completed:
-                return todos.filter(item => item.isCompleted === true)
-            default:
-                return todos;
+    // const getFilterByStatus = createSelector(
+    //     [selectStatus, selectTodo],(status, todos) => {
+    //         switch (status) {
+    //             case TYPE_STATUS.Active:
+    //                 return todos.filter(item => item.isCompleted === false)
+    //             case TYPE_STATUS.Completed:
+    //                 return todos.filter(item => item.isCompleted === true)
+    //             default:
+    //                 return todos;
+    //         }
+    //     }
+    // )
+    // const handleStatus = (type) => {
+    //     '`TYPE_STATUS.${type}`'
+    //     console.log('type:', type); // See Log
+    // }
+    const onClickCheckAllItem = () => {
+        const done = todos.filter(item => item.isCompleted === true)
+        const comp = todos.length === done.length ? '1' : '0';
+        if (comp==='1') {
+            removeCompletedAll();
+        } else {
+            completedAll();
         }
     };
+    // const filterByStatus = (status) => {
+    //     switch (status) {
+    //         case TYPE_STATUS.Active:
+    //             return todos.filter(item => item.isCompleted === false)
+    //         case TYPE_STATUS.Completed:
+    //             return todos.filter(item => item.isCompleted === true)
+    //         default:
+    //             return todos;
+    //     }
+    // };
 
-    return ({todos, itemEdit,getTodos, addTodo, removeTodo, handleUpdate, completeTodo, removeCompletedAll, completedAll, removeAllToDoCompleted, filterByStatus, });
+    return ({todos, getTodos, addTodo, removeTodo, handleUpdate, completeTodo, removeCompletedAll, completedAll, removeAllToDoCompleted, onClickCheckAllItem });
 }
 
 export default useDataRequest;

@@ -13,7 +13,7 @@ function SearchForm(){
         let value = event.target.value.toLowerCase();
         let result = [];
         result = allData.filter((data) => {
-            return data.text.search(value) != -1;
+            return data.text.match(value);
         });
         setFilteredData(result);
     }
@@ -37,7 +37,7 @@ function SearchForm(){
         <div className="todo-list">
             <div>
                 <label>Search:</label>
-                <input type="text" placeholder="On your wish" onChange={(event) =>handleSearch(event)} />
+                <input type="text" placeholder="On your wish" onChange={(event) =>handleSearch(event)}  />
             </div>
             {(info != null) && <div className="infor">
                 <button className="exit" onClick={() => handleExit()}>Exit</button>
@@ -56,7 +56,6 @@ function SearchForm(){
                                 {value.text}
                                 <button onClick={() => handleFocus(value)}>Show</button>
                             </span>
-
                         </ul>
                     )
                 })}
