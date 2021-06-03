@@ -5,10 +5,6 @@ export const selectTodo = createSelector(
     (state) => state['todos'],
     (todos) => todos
 )
-// export const selectStatus = createSelector(
-//     state => state['status'],
-//     (status) => status
-// )
 export const selectStatus = createSelector(
     (state, status) => status,
     status => status,
