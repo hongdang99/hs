@@ -38,7 +38,7 @@ function TodoForm(props) {
     </form>
   );
 }
-
+console.log("Form");
 TodoForm.defaultProps = {
   // addTodo: () => {},
   refCallback: {

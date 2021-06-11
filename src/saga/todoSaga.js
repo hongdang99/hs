@@ -52,7 +52,7 @@ function* doHandleUpdate(action) {
 
 function* doRemoveTodo(action) {
   const { id, index } = action.payload;
-  const response = yield axios.delete(`/todo/${id}`).catch((err) => {
+  yield axios.delete(`/todo/${id}`).catch((err) => {
     console.log("Error: ", err);
   });
   yield put(remove({ id, index }));

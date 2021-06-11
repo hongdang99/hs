@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 
 function Todo({ todo, index, completeTodo, removeTodo, handleUpdate }) {
   if (!(todo && todo.id)) return null;
+  console.log("Todo");
   return (
     <div
       className="todo"

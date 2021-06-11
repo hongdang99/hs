@@ -5,7 +5,6 @@ import TodoForm from "./component/TodoForm.js";
 import useDataRequest from "./hooks/useDataRequest";
 import TYPE_STATUS from "./util/Type_Status";
 import { getFilterByStatus } from "./reselect/connector";
-import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
 
 // const selectStatus = createSelector(
@@ -74,7 +73,7 @@ function App() {
   React.useEffect(() => {
     getTodos();
   }, []);
-
+  console.log("App"); // See Log
   return (
     <div className="app">
       <h1>Xử lý theo kiểu hooks</h1>
